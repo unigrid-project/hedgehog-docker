@@ -26,6 +26,12 @@ docker exec -it hedgehog bash
 ## Build Container
 docker build -t unigrid/hedgehog:testnet .
 
+
+## Stop and remove containers
+```bash
+docker stop watchtower hedgehog
+docker rm watchtower hedgehog
+```
 ## Run
 ### TESTNET
 docker run -d -p 39999:39999 -p 39886:39886 -e NETWORK_ENV=testnet -e GRIDNODE_KEY=<gridnode key> -e NODE_ADD="149.102.147.45" unigrid/hedgehog:testnet
