@@ -1,5 +1,8 @@
 ## Install from python script
-
+```bash
+curl -sSL -o install.py https://raw.githubusercontent.com/unigrid-project/hedgehog-docker/master/install.py
+python3 install.py
+```
 
 ## Build Container
 docker build -t unigrid/hedgehog:testnet .

@@ -29,9 +29,15 @@ def pull_hedgehog_image():
     subprocess.run(["sudo", "docker", "pull", "unigrid/hedgehog:testnet"], check=True)
 
 def install_watchtower():
+    print("Checking if Watchtower is already installed...")
+    existing_container = subprocess.run(["sudo", "docker", "ps", "-a", "-q", "--filter", "name=^/watchtower$"], capture_output=True, text=True)
+    if existing_container.stdout.strip():
+        print("Watchtower container already exists. Removing...")
+        subprocess.run(["sudo", "docker", "rm", "-f", "watchtower"], check=True)
+
     print("Installing Watchtower...")
     interval = random.randint(86400, 172800)
-    subprocess.run(["sudo", "docker", "run", "-d", "--name", "watchtower", "-v", "/var/run/docker.sock:/var/run/docker.sock", "containrrr/watchtower", "--interval", str(interval)], check=True)
+    subprocess.run(["sudo", "docker", "run", "-d", "--name", "watchtower", "-v", "/var/run/docker.sock:/var/run/docker.sock", "containrrr/watchwatchtower", "--interval", str(interval)], check=True)
 
 def setup_hedgehog_volume():
     print("Setting up Docker volume for Hedgehog data...")
