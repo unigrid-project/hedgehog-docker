@@ -1,5 +1,6 @@
 import subprocess
 import random
+import os
 
 def is_docker_installed():
     try:
@@ -48,12 +49,12 @@ def start_hedgehog_container(network, netport, restport, gridnode_key):
     docker_run_cmd = [
         "sudo", "docker", "run", "-d", "-p", f"{netport}:{netport}", "-p", f"{restport}:{restport}",
         "--name", "hedgehog", "-v", "hedgehog_data:/root/.local/share/hedgehog",
+        "-v", "/etc/hedgehog:/etc/hedgehog",
         "unigrid/hedgehog:testnet"
     ]
-    if gridnode_key:
-        docker_run_cmd.extend(["-e", f"GRIDNODE_KEY={gridnode_key}"])
     docker_run_cmd.extend(["-e", f"NETWORK_ENV={network}"])
     subprocess.run(docker_run_cmd, check=True)
+
 
 def ask_for_network():
     print("Please select a network to connect to:")
@@ -69,7 +70,20 @@ def ask_for_network():
         return "testnet", 39999, 39886
 
 def ask_for_gridnode_key():
-    return input("Enter your Gridnode Key (leave blank if not available): ").strip()
+    gridnode_key = input("Enter your Gridnode Key (leave blank if not available): ").strip()
+    if gridnode_key:
+        key_directory = "/etc/hedgehog"
+        key_file_path = os.path.join(key_directory, "gridnode_key.txt")
+
+        # Ensure the directory exists
+        if not os.path.exists(key_directory):
+            os.makedirs(key_directory)
+
+        # Write the key to the file
+        with open(key_file_path, "w") as file:
+            file.write(gridnode_key)
+
+    return gridnode_key
 
 def main():
     if not is_docker_installed():
