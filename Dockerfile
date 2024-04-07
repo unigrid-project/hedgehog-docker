@@ -1,5 +1,9 @@
-# Use OpenJDK 17 JRE
-FROM openjdk:17-oracle
+# Use Ubuntu as the base image
+FROM ubuntu:latest
+
+# Update package list and install any necessary dependencies
+# In this case, procps for process management tools like 'ps'
+RUN apt-get update && apt-get install -y procps
 
 # Set the working directory in the container
 WORKDIR /app

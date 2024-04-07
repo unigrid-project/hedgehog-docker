@@ -4,6 +4,25 @@ curl -sSL -o install.py https://raw.githubusercontent.com/unigrid-project/hedgeh
 python3 install.py
 ```
 
+## Check hedgehog version
+```bash
+docker exec hedgehog /app/hedgehog.bin cli --version
+```
+
+## Check hedgehog conenctions
+```bash
+docker exec hedgehog /app/hedgehog.bin cli node-list --restport=39886
+```
+
+## Check the gridnode list
+```bash
+docker exec hedgehog /app/hedgehog.bin cli gridnode --restport=39886
+```
+
+```bash
+docker exec -it hedgehog bash
+```
+
 ## Build Container
 docker build -t unigrid/hedgehog:testnet .
 
