@@ -5,10 +5,13 @@ FROM openjdk:17-oracle
 WORKDIR /app
 
 # Download the JAR file from GitHub
-ADD https://github.com/unigrid-project/hedgehogTesting/releases/download/v0.0.8/hedgehog-0.0.8-SNAPSHOT-jar-with-dependencies.jar /app/hedgehog.jar
+ADD https://github.com/unigrid-project/hedgehogTesting/releases/download/v0.0.8/hedgehog-0.0.8-x86_64-linux-gnu.bin /app/hedgehog.bin
 
 # Expose the necessary ports
 EXPOSE 39999 39886 40000 40001
+
+# Make the hedgehog binary executable
+RUN chmod +x /app/hedgehog.bin
 
 # Copy the startup script into the container
 COPY scripts/start-hedgehog.sh /app/start-hedgehog.sh

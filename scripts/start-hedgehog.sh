@@ -21,14 +21,14 @@ echo "--------------------------"
 
 # dont expose the rest api to the world for now
 # --resthost=0.0.0.0 
-java -jar /app/hedgehog.jar daemon --netport="$NETPORT" --restport="$RESTPORT" --gridnode="$GRIDNODE_KEY" --no-seeds --network-keys="$NETWORK_KEYS" & #-vvvvvvv >> debug.log
+/app/hedgehog.bin daemon --netport="$NETPORT" --restport="$RESTPORT" --gridnode="$GRIDNODE_KEY" --no-seeds --network-keys="$NETWORK_KEYS" & #-vvvvvvv >> debug.log
 
 # Wait for the Hedgehog daemon to fully start
 sleep 15
 
 # Echo the node-add command for visibility
 echo "Executing node-add command:"
-java -jar /app/hedgehog.jar cli --netport="$NETPORT" --restport="$RESTPORT" node-add "$NODE_ADD":"$NETPORT"
+/app/hedgehog.bin cli --netport="$NETPORT" --restport="$RESTPORT" node-add "$NODE_ADD":"$NETPORT"
 
 
 # Keep the container running
