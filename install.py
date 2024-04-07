@@ -44,7 +44,7 @@ def setup_hedgehog_volume():
     print("Setting up Docker volume for Hedgehog data...")
     subprocess.run(["sudo", "docker", "volume", "create", "hedgehog_data"], check=True)
 
-def start_hedgehog_container(network, netport, restport, gridnode_key):
+def start_hedgehog_container(network, netport, restport):
     print(f"Starting Hedgehog container on {network}...")
     docker_run_cmd = [
         "sudo", "docker", "run", "-d", "-p", f"{netport}:{netport}", "-p", f"{restport}:{restport}",
@@ -54,7 +54,7 @@ def start_hedgehog_container(network, netport, restport, gridnode_key):
     ]
     docker_run_cmd.extend(["-e", f"NETWORK_ENV={network}"])
     subprocess.run(docker_run_cmd, check=True)
-
+    copy_key_to_container()
 
 def ask_for_network():
     print("Please select a network to connect to:")
@@ -72,18 +72,17 @@ def ask_for_network():
 def ask_for_gridnode_key():
     gridnode_key = input("Enter your Gridnode Key (leave blank if not available): ").strip()
     if gridnode_key:
-        key_directory = "/etc/hedgehog"
-        key_file_path = os.path.join(key_directory, "gridnode_key.txt")
-
-        # Ensure the directory exists
-        if not os.path.exists(key_directory):
-            os.makedirs(key_directory)
-
-        # Write the key to the file
-        with open(key_file_path, "w") as file:
+        local_key_file_path = "gridnode_key.txt"  # Saves the file in the current directory
+        with open(local_key_file_path, "w") as file:
             file.write(gridnode_key)
 
-    return gridnode_key
+def copy_key_to_container():
+    local_key_file_path = "gridnode_key.txt"
+    if os.path.exists(local_key_file_path):
+        container_path = "hedgehog:/root/.local/share/hedgehog/gridnode_key.txt"  # Adjust if necessary
+        subprocess.run(["sudo", "docker", "cp", local_key_file_path, container_path], check=True)
+    else:
+        print("Gridnode key file does not exist, not copying to container.")
 
 def main():
     if not is_docker_installed():
@@ -92,13 +91,14 @@ def main():
         print("Docker is already installed.")
 
     network, netport, restport = ask_for_network()
-    gridnode_key = ask_for_gridnode_key()
+    ask_for_gridnode_key()
 
     setup_firewall()
     pull_hedgehog_image()
     install_watchtower()
     setup_hedgehog_volume()
-    start_hedgehog_container(network, netport, restport, gridnode_key)
+    start_hedgehog_container(network, netport, restport)
+    
 
 if __name__ == "__main__":
     main()

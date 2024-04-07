@@ -24,8 +24,9 @@ docker exec -it hedgehog bash
 ```
 
 ## Build Container
-docker build -t unigrid/hedgehog:testnet .
-
+```bash
+docker build --no-cache -t unigrid/hedgehog:testnet .
+```
 
 ## Stop and remove containers
 ```bash
