@@ -37,7 +37,7 @@ def install_watchtower():
 
     print("Installing Watchtower...")
     interval = random.randint(86400, 172800)
-    subprocess.run(["sudo", "docker", "run", "-d", "--name", "watchtower", "-v", "/var/run/docker.sock:/var/run/docker.sock", "containrrr/watchwatchtower", "--interval", str(interval)], check=True)
+    subprocess.run(["sudo", "docker", "run", "-d", "--name", "watchtower", "-v", "/var/run/docker.sock:/var/run/docker.sock", "containrrr/watchtower", "--interval", str(interval)], check=True)
 
 def setup_hedgehog_volume():
     print("Setting up Docker volume for Hedgehog data...")
