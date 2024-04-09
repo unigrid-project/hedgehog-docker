@@ -61,7 +61,7 @@ def start_hedgehog_container(network, netport, restport, node_add):
         docker_run_cmd.extend(["-e", f"NODE_ADD={node_add}"])
     print("Docker run command:", " ".join(docker_run_cmd))
     print(f"Network: {network}, Node Add: {node_add}")
-    subprocess.run(docker_run_cmd, check=True)
+    subprocess.run(" ".join(docker_run_cmd), shell=True, check=True)
     copy_key_to_container()
 
 def ask_for_network():
