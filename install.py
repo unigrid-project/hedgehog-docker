@@ -94,9 +94,9 @@ def copy_key_to_container():
 
 def ask_for_node_add():
     print("Select the Node Address option:")
-    print(f"1) Use default ({DEFAULT_NODE_ADD})")
-    print("2) Leave blank")
-    print("3) Enter a new IP address")
+    print(f"1) Use default ({DEFAULT_NODE_ADD}) - This will use the predefined default IP address.")
+    print("2) Leave blank - No specific node address will be set.")
+    print("3) Enter a new IP address - You can specify a custom IP address.")
     choice = input("Enter your choice (1/2/3), default [1]: ").strip()
 
     if choice == "1" or choice == "":
