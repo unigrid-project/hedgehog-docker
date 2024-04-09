@@ -48,6 +48,7 @@ def setup_hedgehog_volume():
 
 def start_hedgehog_container(network, netport, restport, node_add):
     print(f"Starting Hedgehog container on {network}...")
+    print("Using seed node: " + node_add)
     docker_run_cmd = [
         "sudo", "docker", "run", "-d", "-p", f"{netport}:{netport}", "-p", f"{restport}:{restport}",
         "--name", "hedgehog", "-v", "hedgehog_data:/root/.local/share/hedgehog",
@@ -98,12 +99,12 @@ def ask_for_node_add():
     print("3) Enter a new IP address")
     choice = input("Enter your choice (1/2/3), default [1]: ").strip()
 
-    if choice == "2":
+    if choice == "1" or choice == "":
+        return DEFAULT_NODE_ADD  # Use the default IP address
+    elif choice == "2":
         return ""  # Leave blank
     elif choice == "3":
         return input("Enter the new Node Address: ").strip()
-    else:
-        return DEFAULT_NODE_ADD  # Use the default IP address
 
 def main():
     if not is_docker_installed():
