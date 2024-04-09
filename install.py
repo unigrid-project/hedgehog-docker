@@ -51,12 +51,15 @@ def start_hedgehog_container(network, netport, restport, node_add):
     docker_run_cmd = [
         "sudo", "docker", "run", "-d", "-p", f"{netport}:{netport}", "-p", f"{restport}:{restport}",
         "--name", "hedgehog", "-v", "hedgehog_data:/root/.local/share/hedgehog",
-        "-v", "/etc/hedgehog:/etc/hedgehog",
         "unigrid/hedgehog:testnet"
     ]
+    # Set NETWORK_ENV environment variable
+    docker_run_cmd.extend(["-e", f"NETWORK_ENV={network}"])
+    # Set NODE_ADD environment variable if provided
     if node_add:
         docker_run_cmd.extend(["-e", f"NODE_ADD={node_add}"])
-    docker_run_cmd.extend(["-e", f"NETWORK_ENV={network}"])
+    print("Docker run command:", " ".join(docker_run_cmd))
+    print(f"Network: {network}, Node Add: {node_add}")
     subprocess.run(docker_run_cmd, check=True)
     copy_key_to_container()
 
