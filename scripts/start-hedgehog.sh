@@ -50,6 +50,12 @@ if [ -s "$GRIDNODE_KEY_FILE" ]; then
     HEDGEHOG_COMMAND="$HEDGEHOG_COMMAND --gridnode=\"$GRIDNODE_KEY\""
 fi
 
+# Check if the REST_HOST exists and is not empty
+if [ -n "$REST_HOST" ]; then
+    log "REST Host: $REST_HOST"
+    HEDGEHOG_COMMAND="$HEDGEHOG_COMMAND $REST_HOST"
+fi
+
 log "Starting Hedgehog with the following settings:"
 log "Network Port: $NETPORT"
 log "REST Port: $RESTPORT"

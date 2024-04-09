@@ -103,7 +103,7 @@ def setup_hedgehog_volume():
     subprocess.run(["sudo", "docker", "volume", "create", "hedgehog_data"], check=True)
 
 
-def start_hedgehog_container(network, netport, restport, node_add):
+def start_hedgehog_container(network, netport, restport, node_add, rest_expose_cmd):
     print(f"Starting Hedgehog container on {network}...")
     print("Using seed node: " + node_add)
     docker_run_cmd = [
@@ -126,7 +126,9 @@ def start_hedgehog_container(network, netport, restport, node_add):
     # Set NODE_ADD environment variable if provided
     if node_add:
         docker_run_cmd.extend(["-e", f"NODE_ADD={node_add}"])
-
+    # Set REST_EXPOSE environment variable if provided
+    if rest_expose_cmd:
+        docker_run_cmd.extend(["-e", f"REST_HOST={rest_expose_cmd}"])
     # Append the Docker image name at the end
     docker_run_cmd.append("unigrid/hedgehog:testnet")
 
@@ -188,6 +190,16 @@ def ask_for_node_add():
     elif choice == "3":
         return input("Enter the new Node Address: ").strip()
 
+def ask_for_rest_exposure():
+    print("Do you want to expose the REST service to the world? This allows anyone to send commands to this node.")
+    print("1) Yes - Expose REST service")
+    print("2) No - Do not expose REST service (default)")
+    choice = input("Enter your choice (1/2), default [2]: ").strip()
+
+    if choice == "1":
+        return "--resthost=0.0.0.0"
+    else:
+        return ""
 
 def main():
     if not is_docker_installed():
@@ -198,11 +210,12 @@ def main():
     network, netport, restport = ask_for_network()
     ask_for_gridnode_key()
     node_add = ask_for_node_add()
+    rest_expose_cmd = ask_for_rest_exposure()
     setup_firewall()
     pull_hedgehog_image()
     install_watchtower()
     setup_hedgehog_volume()
-    start_hedgehog_container(network, netport, restport, node_add)
+    start_hedgehog_container(network, netport, restport, node_add, rest_expose_cmd)
 
 
 if __name__ == "__main__":
