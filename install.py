@@ -46,7 +46,7 @@ def setup_hedgehog_volume():
     print("Setting up Docker volume for Hedgehog data...")
     subprocess.run(["sudo", "docker", "volume", "create", "hedgehog_data"], check=True)
 
-def start_hedgehog_container(network, netport, restport):
+def start_hedgehog_container(network, netport, restport, node_add):
     print(f"Starting Hedgehog container on {network}...")
     docker_run_cmd = [
         "sudo", "docker", "run", "-d", "-p", f"{netport}:{netport}", "-p", f"{restport}:{restport}",
@@ -54,6 +54,8 @@ def start_hedgehog_container(network, netport, restport):
         "-v", "/etc/hedgehog:/etc/hedgehog",
         "unigrid/hedgehog:testnet"
     ]
+    if node_add:
+        docker_run_cmd.extend(["-e", f"NODE_ADD={node_add}"])
     docker_run_cmd.extend(["-e", f"NETWORK_ENV={network}"])
     subprocess.run(docker_run_cmd, check=True)
     copy_key_to_container()
