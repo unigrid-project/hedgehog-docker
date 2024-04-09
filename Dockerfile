@@ -26,7 +26,7 @@ RUN chmod +x /app/start-hedgehog.sh
 # Define default values for ports and IP address
 ENV NETPORT=39999
 ENV RESTPORT=39886
-ENV NODE_ADD=149.102.147.45
+ENV NODE_ADD=207.180.254.48
 
 # Add an empty GRIDNODE_KEY environment variable
 ENV GRIDNODE_KEY=

@@ -63,9 +63,13 @@ eval $HEDGEHOG_COMMAND &
 # Wait for the Hedgehog daemon to fully start
 sleep 15
 
-# Echo the node-add command for visibility
-log "Executing node-add command:"
-/app/hedgehog.bin cli --netport="$NETPORT" --restport="$RESTPORT" node-add "$NODE_ADD":"$NETPORT"
+# Check if NODE_ADD is set and not empty before executing node-add command
+if [ -n "$NODE_ADD" ]; then
+    log "Executing node-add command with NODE_ADD set to $NODE_ADD"
+    /app/hedgehog.bin cli --netport="$NETPORT" --restport="$RESTPORT" node-add "$NODE_ADD":"$NETPORT"
+else
+    log "NODE_ADD is not set, skipping node-add command"
+fi
 
 # Keep the container running
 tail -f $LOG_FILE

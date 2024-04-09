@@ -2,6 +2,8 @@ import subprocess
 import random
 import os
 
+DEFAULT_NODE_ADD = "207.180.254.48"
+
 def is_docker_installed():
     try:
         subprocess.run(["docker", "--version"], check=True)
@@ -84,6 +86,20 @@ def copy_key_to_container():
     else:
         print("Gridnode key file does not exist, not copying to container.")
 
+def ask_for_node_add():
+    print("Select the Node Address option:")
+    print(f"1) Use default ({DEFAULT_NODE_ADD})")
+    print("2) Leave blank")
+    print("3) Enter a new IP address")
+    choice = input("Enter your choice (1/2/3), default [1]: ").strip()
+
+    if choice == "2":
+        return ""  # Leave blank
+    elif choice == "3":
+        return input("Enter the new Node Address: ").strip()
+    else:
+        return DEFAULT_NODE_ADD  # Use the default IP address
+
 def main():
     if not is_docker_installed():
         install_docker()
@@ -92,12 +108,12 @@ def main():
 
     network, netport, restport = ask_for_network()
     ask_for_gridnode_key()
-
+    node_add = ask_for_node_add()
     setup_firewall()
     pull_hedgehog_image()
     install_watchtower()
     setup_hedgehog_volume()
-    start_hedgehog_container(network, netport, restport)
+    start_hedgehog_container(network, netport, restport, node_add)
     
 
 if __name__ == "__main__":
